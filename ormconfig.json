@@ -1,0 +1,11 @@
+{
+  "type": "cockroachdb",
+  "url": "postgresql://cato:M_XOb_O83j_wGrSQ1Y6sqQ@free-tier13.aws-eu-central-1.cockroachlabs.cloud:26257/request?sslmode=verify-full",
+  "ssl": true,
+  "synchronize": true,
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "migrations": ["dist/migrations/*{.ts,.js}"],
+  "extra": {
+    "options": "--cluster=ragged-sponge-393"
+  }
+}
