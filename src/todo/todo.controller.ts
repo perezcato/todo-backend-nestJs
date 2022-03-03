@@ -9,8 +9,8 @@ import {
   Res,
 } from '@nestjs/common';
 import TodoService from './todo.service';
-import { Todo } from './todo.entity';
 import { Response } from 'express';
+import { Todo } from '../entity/todo.entity';
 
 @Controller('todo')
 export default class TodoController {
