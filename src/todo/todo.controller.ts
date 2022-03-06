@@ -24,7 +24,6 @@ export default class TodoController {
   constructor(
     private todoService: TodoService,
     @Inject(CACHE_MANAGER) private cache: Cache,
-    @Inject('POC_KAFKA_INSTANCE') private kafka: ClientKafka,
   ) {}
 
   @Get()
@@ -50,10 +49,10 @@ export default class TodoController {
   ): Promise<Todo> {
     const todo = await this.todoService.addTodo(reqBody.name);
     await this.cache.del(`${req.user.id}`);
-    const todoEmit = await firstValueFrom(
-      this.kafka.emit('todo', { id: todo.id }),
-    );
-    console.log('this is the todoemit', todoEmit);
+    // const todoEmit = await firstValueFrom(
+    //   this.kafka.emit('todo', { id: todo.id }),
+    // );
+    // console.log('this is the todoemit', todoEmit);
     return new Promise<Todo>((resolve) => resolve(todo));
   }
 
