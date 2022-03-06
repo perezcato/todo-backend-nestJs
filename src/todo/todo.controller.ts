@@ -16,24 +16,30 @@ import TodoService from './todo.service';
 import { Response } from 'express';
 import { Todo } from '../entity/todo.entity';
 import RequestWithUser from '../auth/RequestWithUser';
+import { ClientKafka } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('todo')
 export default class TodoController {
   constructor(
     private todoService: TodoService,
     @Inject(CACHE_MANAGER) private cache: Cache,
+    @Inject('POC_KAFKA_INSTANCE') private kafka: ClientKafka,
   ) {}
 
   @Get()
   async getAll(@Req() req: RequestWithUser): Promise<Todo[]> {
-    const cachedTodos = await this.cache.get(`${req.user.id}`);
-    if (cachedTodos) {
+    const cachedTodos = (await this.cache.get(`${req.user.id}`)) as Todo[];
+    console.log('cached todos', cachedTodos);
+    if (cachedTodos && cachedTodos.length > 0) {
       return this.cache.get(`${req.user.id}`);
     }
     const todos = await this.todoService.findAllUserTodos(req.user.id);
-    await this.cache.set(`${req.user.id}`, todos, {
+    const caching = await this.cache.set(`${req.user.id}`, todos, {
       ttl: parseInt((+new Date() / 1000).toString()) + 86400,
     });
+
+    console.log('this is the todos', todos, caching);
     return new Promise<Todo[]>((resolve) => resolve(todos));
   }
 
@@ -44,6 +50,10 @@ export default class TodoController {
   ): Promise<Todo> {
     const todo = await this.todoService.addTodo(reqBody.name);
     await this.cache.del(`${req.user.id}`);
+    const todoEmit = await firstValueFrom(
+      this.kafka.emit('todo', { id: todo.id }),
+    );
+    console.log('this is the todoemit', todoEmit);
     return new Promise<Todo>((resolve) => resolve(todo));
   }
 

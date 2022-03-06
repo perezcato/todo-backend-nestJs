@@ -9,6 +9,9 @@ export class Todo {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  emoji: string;
+
   @ManyToOne(() => User, (user) => user.todos)
   user: User;
 }
