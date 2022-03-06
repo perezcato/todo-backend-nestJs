@@ -47,12 +47,8 @@ export default class TodoController {
     @Body() reqBody: { name: string },
     @Req() req: RequestWithUser,
   ): Promise<Todo> {
-    const todo = await this.todoService.addTodo(reqBody.name);
+    const todo = await this.todoService.addTodo(reqBody.name, req.user);
     await this.cache.del(`${req.user.id}`);
-    // const todoEmit = await firstValueFrom(
-    //   this.kafka.emit('todo', { id: todo.id }),
-    // );
-    // console.log('this is the todoemit', todoEmit);
     return new Promise<Todo>((resolve) => resolve(todo));
   }
 
