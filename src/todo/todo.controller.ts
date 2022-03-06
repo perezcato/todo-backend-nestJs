@@ -34,7 +34,7 @@ export default class TodoController {
     await this.cache.set(`${req.user.id}`, todos, {
       ttl: parseInt((+new Date() / 1000).toString()) + 86400,
     });
-    return new Promise<Todo[]>((resolve, rejects) => resolve(todos));
+    return new Promise<Todo[]>((resolve) => resolve(todos));
   }
 
   @Post()
