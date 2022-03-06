@@ -14,6 +14,10 @@ export default class TodoService {
     return this.todoRepository.find();
   }
 
+  async findAllUserTodos(userId: string): Promise<Todo[]> {
+    return this.todoRepository.find({ where: { user: userId } });
+  }
+
   async addTodo(name: string): Promise<Todo> {
     const todo = this.todoRepository.create({ name: name });
     return this.todoRepository.save(todo);

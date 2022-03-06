@@ -2,8 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Todo } from './todo.entity';
 
 @Entity('users')
 export default class User {
@@ -31,4 +33,7 @@ export default class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
+
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo;
 }
