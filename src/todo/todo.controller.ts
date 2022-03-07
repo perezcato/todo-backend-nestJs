@@ -53,6 +53,7 @@ export default class TodoController {
     await this.cache.del(`${req.user.id}`);
     await this.kafkaProducer.send({
       topic: 'poc-server',
+
       messages: [{ value: todo.id.toString() }],
     });
     return new Promise<Todo>((resolve) => resolve(todo));
