@@ -18,12 +18,14 @@ import { Todo } from '../entity/todo.entity';
 import RequestWithUser from '../auth/RequestWithUser';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { Producer } from '@nestjs/microservices/external/kafka.interface';
 
 @Controller('todo')
 export default class TodoController {
   constructor(
     private todoService: TodoService,
     @Inject(CACHE_MANAGER) private cache: Cache,
+    @Inject('KAFKA_PRODUCER') private kafkaProducer: Producer,
   ) {}
 
   @Get()
@@ -49,6 +51,10 @@ export default class TodoController {
   ): Promise<Todo> {
     const todo = await this.todoService.addTodo(reqBody.name, req.user);
     await this.cache.del(`${req.user.id}`);
+    this.kafkaProducer.send({
+      topic: 'poc-server',
+      messages: [{ value: todo.id.toString() }],
+    });
     return new Promise<Todo>((resolve) => resolve(todo));
   }
 

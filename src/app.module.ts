@@ -14,6 +14,7 @@ import AuthMiddleware from './middlewares/auth.middleware';
 import UsersModule from './users/users.module';
 import * as RedisStore from 'cache-manager-redis-store';
 import KafkaModule from './common/modules/kafka.module';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -28,10 +29,19 @@ import KafkaModule from './common/modules/kafka.module';
       port: '10410',
       password: 'eBcKnhUDPcwUe2GEfukchA7AcrSxcUAB',
     }),
-    // KafkaModule,
+    KafkaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'KAFKA_PRODUCER',
+      useFactory: async (kafkaClient: ClientKafka) => {
+        return kafkaClient.connect();
+      },
+      inject: ['POC_KAFKA_INSTANCE'],
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
