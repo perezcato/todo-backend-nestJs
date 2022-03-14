@@ -10,18 +10,17 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['pkc-6ojv2.us-west4.gcp.confluent.cloud:9092'],
+            brokers: [process.env.KAFKA_BROKER],
             ssl: true,
             sasl: {
-              username: 'Z65D7EVKIR45UUDQ',
-              password:
-                'CRgr9RTtaFZLVtGUeXDqx0BK638iRZ6fAqHVgX3PwhjYwpJESP/R56IURmgzou6E',
+              username: process.env.USERNAME,
+              password: process.env.PASSWORD,
               mechanism: 'plain',
             },
             requestTimeout: 4500,
           },
           consumer: {
-            groupId: 'poc_test_consumer_group',
+            groupId: process.env.CONSUMER_GROUP,
           },
         },
       },

@@ -40,7 +40,6 @@ export default class TodoController {
       ttl: parseInt((+new Date() / 1000).toString()) + 86400,
     });
 
-    console.log('this is the todos', todos, caching);
     return new Promise<Todo[]>((resolve) => resolve(todos));
   }
 

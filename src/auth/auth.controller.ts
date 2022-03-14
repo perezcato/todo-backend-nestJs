@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import CreateUserDto from './CreateUserDto';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import UserSignInDTO from './UserSignInDTO';
+import AdminGuard from '../guards/admin.guard';
 
 @Controller('auth')
 export default class AuthController {
@@ -41,6 +43,7 @@ export default class AuthController {
   }
 
   @Post('register')
+  @UseGuards(AdminGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   async register(
     @Body() body: CreateUserDto,

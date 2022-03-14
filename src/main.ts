@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: { origin: 'https://todo-next-js-naxi6.ondigitalocean.app' },
+    cors: { origin: process.env.CORS },
   });
 
   await app.listen(process.env.PORT || 3000);

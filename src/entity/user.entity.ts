@@ -34,6 +34,9 @@ export default class User {
   })
   updated_at: Date;
 
+  @Column({ default: false })
+  admin: boolean;
+
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo;
 }

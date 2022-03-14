@@ -25,9 +25,9 @@ import { ClientKafka } from '@nestjs/microservices';
     CacheModule.register({
       isGlobal: true,
       store: RedisStore,
-      host: 'redis-10410.c15.us-east-1-4.ec2.cloud.redislabs.com',
-      port: '10410',
-      password: 'eBcKnhUDPcwUe2GEfukchA7AcrSxcUAB',
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
     }),
     KafkaModule,
   ],
