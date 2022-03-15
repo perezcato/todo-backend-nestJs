@@ -22,6 +22,9 @@ export default class UserService {
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { email: email } });
+    return await this.userRepository.findOne({
+      where: { email: email },
+      relations: ['roles'],
+    });
   }
 }

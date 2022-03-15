@@ -15,6 +15,10 @@ import UsersModule from './users/users.module';
 import * as RedisStore from 'cache-manager-redis-store';
 import KafkaModule from './common/modules/kafka.module';
 import { ClientKafka } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -22,6 +26,9 @@ import { ClientKafka } from '@nestjs/microservices';
     TodoModule,
     AuthModule,
     UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     CacheModule.register({
       isGlobal: true,
       store: RedisStore,

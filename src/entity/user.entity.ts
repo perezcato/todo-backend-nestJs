@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Todo } from './todo.entity';
+import Role from './role.entity';
 
 @Entity('users')
 export default class User {
@@ -39,4 +42,8 @@ export default class User {
 
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo;
+
+  @ManyToMany(() => Role)
+  @JoinTable()
+  roles: Role;
 }

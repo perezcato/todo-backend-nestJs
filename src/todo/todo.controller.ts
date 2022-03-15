@@ -10,6 +10,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import TodoService from './todo.service';
@@ -19,6 +20,8 @@ import RequestWithUser from '../auth/RequestWithUser';
 import { ClientKafka } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Producer } from '@nestjs/microservices/external/kafka.interface';
+import { Roles } from '../decorators/role.decorator';
+import AdminGuard from '../guards/admin.guard';
 
 @Controller('todo')
 export default class TodoController {
@@ -29,6 +32,8 @@ export default class TodoController {
   ) {}
 
   @Get()
+  @UseGuards(AdminGuard)
+  @Roles('read')
   async getAll(@Req() req: RequestWithUser): Promise<Todo[]> {
     const cachedTodos = (await this.cache.get(`${req.user.id}`)) as Todo[];
     console.log('cached todos', cachedTodos);
@@ -44,6 +49,8 @@ export default class TodoController {
   }
 
   @Post()
+  @UseGuards(AdminGuard)
+  @Roles('create')
   async addTodo(
     @Body() reqBody: { name: string },
     @Req() req: RequestWithUser,
@@ -59,6 +66,8 @@ export default class TodoController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
+  @Roles('delete')
   deleteTodo(
     @Param() params: { id: string },
     @Req() req: RequestWithUser,

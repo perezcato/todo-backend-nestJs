@@ -1,5 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Global()
 @Module({
@@ -13,14 +16,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             brokers: [process.env.KAFKA_BROKER],
             ssl: true,
             sasl: {
-              username: process.env.USERNAME,
-              password: process.env.PASSWORD,
+              username: process.env.KAFKA_USERNAME,
+              password: process.env.KAFKA_PASSWORD,
               mechanism: 'plain',
             },
             requestTimeout: 4500,
           },
           consumer: {
-            groupId: process.env.CONSUMER_GROUP,
+            groupId: process.env.KAFKA_CONSUMER_GROUP,
           },
         },
       },
